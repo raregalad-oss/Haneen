@@ -1,1 +1,235 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZONE GALAD NONTY</title>
 
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    background:#000;
+    color:#00ff66;
+    font-family:"Courier New",monospace;
+    overflow:hidden;
+}
+
+.scanlines{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    background:repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,.025) 0px,
+        rgba(255,255,255,.025) 1px,
+        transparent 2px,
+        transparent 4px
+    );
+    z-index:5;
+}
+
+.matrix{
+    position:fixed;
+    inset:0;
+    opacity:.18;
+    color:#00ff44;
+    font-size:15px;
+    line-height:17px;
+    word-break:break-all;
+    overflow:hidden;
+    z-index:0;
+}
+
+.terminal{
+    position:relative;
+    z-index:2;
+    height:100vh;
+    padding:25px;
+    overflow:hidden;
+    text-align:left;
+    direction:ltr;
+    text-shadow:0 0 6px #00ff44;
+}
+
+.line{
+    margin:3px 0;
+    font-size:15px;
+}
+
+.warning{
+    color:#ff2020;
+    text-shadow:0 0 8px red;
+}
+
+.big{
+    position:absolute;
+    left:50%;
+    top:48%;
+    transform:translate(-50%,-50%);
+    width:100%;
+    text-align:center;
+    direction:rtl;
+    color:#ff1111;
+    font-size:clamp(35px,7vw,100px);
+    font-weight:900;
+    text-shadow:
+        0 0 5px red,
+        0 0 15px red,
+        0 0 35px #900;
+    animation:glitch .8s infinite;
+}
+
+.blood{
+    position:absolute;
+    top:calc(50% + 35px);
+    left:50%;
+    transform:translateX(-50%);
+    width:75%;
+    height:140px;
+    pointer-events:none;
+}
+
+.drop{
+    position:absolute;
+    top:0;
+    width:7px;
+    height:var(--h);
+    background:#b00000;
+    border-radius:0 0 8px 8px;
+    box-shadow:0 0 8px red;
+    animation:drip var(--t) infinite ease-in;
+}
+
+@keyframes drip{
+    0%{transform:scaleY(.1);transform-origin:top}
+    70%{transform:scaleY(1)}
+    100%{transform:translateY(100px);opacity:0}
+}
+
+@keyframes glitch{
+    0%,100%{transform:translate(-50%,-50%) skew(0)}
+    20%{transform:translate(calc(-50% + 4px),-50%) skew(2deg)}
+    21%{transform:translate(calc(-50% - 4px),-50%) skew(-2deg)}
+    60%{transform:translate(-50%,calc(-50% + 2px))}
+}
+
+.corner{
+    position:fixed;
+    z-index:10;
+    color:#ff2020;
+    font-size:13px;
+}
+
+.tl{top:12px;left:15px}
+.tr{top:12px;right:15px}
+.bl{bottom:12px;left:15px}
+.br{bottom:12px;right:15px}
+
+.blink{
+    animation:blink .6s infinite;
+}
+
+@keyframes blink{
+    50%{opacity:0}
+}
+</style>
+</head>
+
+<body>
+
+<div class="matrix" id="matrix"></div>
+<div class="scanlines"></div>
+
+<div class="corner tl">[ ZONE-GALAD-NONTY ]</div>
+<div class="corner tr">SYSTEM: UNKNOWN</div>
+<div class="corner bl">SIGNAL: <span class="blink">UNSTABLE</span></div>
+<div class="corner br">NODE: 13-X</div>
+
+<div class="terminal" id="terminal"></div>
+
+<div class="big">مرحبًا بك في الموت</div>
+
+<div class="blood">
+    <span class="drop" style="left:8%;--h:70px;--t:2.2s"></span>
+    <span class="drop" style="left:18%;--h:110px;--t:3s"></span>
+    <span class="drop" style="left:29%;--h:55px;--t:2.5s"></span>
+    <span class="drop" style="left:41%;--h:95px;--t:3.5s"></span>
+    <span class="drop" style="left:53%;--h:65px;--t:2.8s"></span>
+    <span class="drop" style="left:67%;--h:120px;--t:3.2s"></span>
+    <span class="drop" style="left:79%;--h:80px;--t:2.4s"></span>
+    <span class="drop" style="left:91%;--h:105px;--t:3.7s"></span>
+</div>
+
+<script>
+const terminal = document.getElementById("terminal");
+
+const messages = [
+"> INITIALIZING SYSTEM...",
+"> CONNECTING TO SECURE NODE...",
+"> CONNECTION ESTABLISHED",
+"> SYSTEM STATUS: ACTIVE",
+"> ENCRYPTED CHANNEL: ONLINE",
+"> SCANNING NETWORK...",
+"> FIREWALL STATUS: ACTIVE",
+"> UNKNOWN DEVICE DETECTED",
+"> TRACE SIGNAL FOUND",
+"> TRACE SIGNAL LOST",
+"> SECURITY PROTOCOL ACTIVE",
+"> ACCESS LEVEL: CLASSIFIED",
+"> NODE 07X-13 ONLINE",
+"> SIGNAL: UNSTABLE",
+"> ENCRYPTION: ENABLED",
+"> SYSTEM ERROR 0x000013",
+"> RECOVERING DATA...",
+"> MEMORY CHECK: 100%",
+"> DATABASE CONNECTION: LOST",
+"> RECONNECTING...",
+"> WARNING: UNKNOWN USER",
+"> WARNING: DO NOT CLOSE WINDOW",
+"> WARNING: SIGNAL DETECTED",
+"> SYSTEM FAILURE IMMINENT",
+"> FINAL PROTOCOL ACTIVATED..."
+];
+
+let i=0;
+
+function addLine(){
+    if(i < messages.length){
+        const div=document.createElement("div");
+        div.className="line " + (messages[i].includes("WARNING") || messages[i].includes("FAILURE") ? "warning":"");
+        div.textContent=messages[i];
+        terminal.appendChild(div);
+        i++;
+    }else{
+        const div=document.createElement("div");
+        div.className="line warning";
+        div.textContent="> " + Math.random().toString(36).substring(2,18).toUpperCase();
+        terminal.appendChild(div);
+    }
+
+    while(terminal.children.length>32)
+        terminal.removeChild(terminal.firstChild);
+}
+
+setInterval(addLine,180);
+
+const matrix=document.getElementById("matrix");
+
+let chars="01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@";
+let text="";
+
+for(let x=0;x<9000;x++){
+    text+=chars[Math.floor(Math.random()*chars.length)];
+}
+
+matrix.textContent=text;
+
+document.addEventListener("keydown",()=>{
+    for(let x=0;x<3;x++) addLine();
+});
+</script>
+
+</body>
+</html>
