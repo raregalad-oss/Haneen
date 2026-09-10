@@ -2,300 +2,443 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>مملكة جلاده</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#000;
+    font-family:monospace;
+}
 
 body{
-  margin:0;
-  background:#000;
-  overflow:hidden;
-  font-family:Arial,sans-serif;
+    color:#00ff41;
 }
 
-.start{
-  position:fixed;
-  inset:0;
-  background:#030303;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  z-index:20;
+/* شاشة الهكر */
+#hack{
+    position:absolute;
+    inset:0;
+    padding:30px;
+    background:
+      radial-gradient(circle at center, #031000 0%, #000 70%);
+    font-size:18px;
+    line-height:1.7;
+    text-shadow:0 0 8px #00ff41;
 }
 
-button{
-  background:#080808;
-  color:#d00;
-  border:2px solid #900;
-  padding:20px 45px;
-  font-size:24px;
-  font-weight:bold;
-  border-radius:8px;
-  cursor:pointer;
-  box-shadow:0 0 25px #700;
+.line{
+    opacity:0;
+    animation:show .3s forwards;
 }
 
-.scene{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(circle at 50% 45%,#260000 0%,#090000 35%,#000 75%);
-  overflow:hidden;
+@keyframes show{
+    to{opacity:1}
 }
 
-.dark{
-  position:absolute;
-  inset:0;
-  background:rgba(0,0,0,.35);
+.cursor{
+    display:inline-block;
+    width:10px;
+    height:20px;
+    background:#00ff41;
+    animation:blink .5s infinite;
+}
+
+@keyframes blink{
+    50%{opacity:0}
+}
+
+/* خطوط الشاشة */
+.scanlines{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:50;
+    background:repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.025) 0px,
+        rgba(255,255,255,.025) 1px,
+        transparent 2px,
+        transparent 4px
+    );
+}
+
+/* فلاش */
+#flash{
+    position:fixed;
+    inset:0;
+    background:white;
+    opacity:0;
+    z-index:100;
+    pointer-events:none;
+}
+
+.flash{
+    animation:flash .35s;
+}
+
+@keyframes flash{
+    0%{opacity:0}
+    20%{opacity:.95}
+    40%{opacity:0}
+    60%{opacity:.8}
+    100%{opacity:0}
 }
 
 /* الوحش */
-.monster{
-  position:absolute;
-  left:50%;
-  top:46%;
-  transform:translate(-50%,-50%) scale(.2);
-  width:330px;
-  height:430px;
-  opacity:0;
-  animation:monsterShow 7s forwards;
+#monster{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    z-index:20;
+    transform:scale(.3);
 }
 
-.head{
-  position:absolute;
-  width:270px;
-  height:300px;
-  left:30px;
-  top:45px;
-  background:#090909;
-  border-radius:48% 48% 42% 42%;
-  box-shadow:0 0 35px #000,0 0 80px #300;
+.monster-body{
+    position:relative;
+    width:330px;
+    height:420px;
+    background:#050505;
+    border-radius:48% 48% 25% 25%;
+    box-shadow:
+        0 0 30px #ff0000,
+        0 0 100px #550000;
 }
 
+/* القرون */
 .horn{
-  position:absolute;
-  width:75px;
-  height:150px;
-  background:#070707;
-  clip-path:polygon(50% 0,100% 100%,0 100%);
-  top:-105px;
+    position:absolute;
+    top:-130px;
+    width:100px;
+    height:170px;
+    background:#050505;
+    clip-path:polygon(50% 0,100% 100%,55% 75%,25% 100%);
 }
 
-.horn.left{left:15px;transform:rotate(-22deg)}
-.horn.right{right:15px;transform:rotate(22deg)}
+.horn.left{
+    left:15px;
+    transform:rotate(-18deg);
+}
 
+.horn.right{
+    right:15px;
+    transform:scaleX(-1) rotate(-18deg);
+}
+
+/* العيون */
 .eye{
-  position:absolute;
-  width:58px;
-  height:28px;
-  background:#ff1111;
-  border-radius:50%;
-  top:115px;
-  box-shadow:0 0 20px red,0 0 45px red;
+    position:absolute;
+    top:120px;
+    width:85px;
+    height:42px;
+    background:#ff0000;
+    box-shadow:0 0 25px red;
+    border-radius:50%;
 }
 
+.eye.left{
+    left:45px;
+    transform:rotate(12deg);
+}
+
+.eye.right{
+    right:45px;
+    transform:rotate(-12deg);
+}
+
+/* البؤبؤ */
 .eye:after{
-  content:"";
-  position:absolute;
-  left:27px;
-  top:2px;
-  width:5px;
-  height:24px;
-  background:#000;
+    content:"";
+    position:absolute;
+    left:38px;
+    top:4px;
+    width:8px;
+    height:34px;
+    background:#000;
 }
 
-.eye.left{left:45px}
-.eye.right{right:45px}
-
+/* الفم */
 .mouth{
-  position:absolute;
-  width:155px;
-  height:70px;
-  left:57px;
-  top:190px;
-  background:#000;
-  border-radius:10px 10px 50% 50%;
-  border-bottom:4px solid #900;
+    position:absolute;
+    left:45px;
+    right:45px;
+    bottom:65px;
+    height:115px;
+    background:#000;
+    border:4px solid #550000;
+    border-radius:10px 10px 50% 50%;
+    overflow:hidden;
 }
 
+/* الأسنان */
 .tooth{
-  position:absolute;
-  width:9px;
-  height:25px;
-  background:#ddd;
-  top:0;
-  clip-path:polygon(0 0,100% 0,50% 100%);
+    position:relative;
+    display:inline-block;
+    width:0;
+    height:0;
+    border-left:10px solid transparent;
+    border-right:10px solid transparent;
+    border-top:30px solid #fff;
+    margin:4px 3px;
 }
 
-.tooth:nth-child(1){left:15px}
-.tooth:nth-child(2){left:40px}
-.tooth:nth-child(3){left:65px}
-.tooth:nth-child(4){left:90px}
-.tooth:nth-child(5){left:115px}
-
-.body{
-  position:absolute;
-  width:230px;
-  height:190px;
-  left:50px;
-  top:285px;
-  background:#070707;
-  border-radius:50% 50% 10% 10%;
-  box-shadow:0 0 50px #000;
+/* ظهور الوحش */
+.showMonster{
+    animation:
+      monsterIn .55s cubic-bezier(.1,1.5,.3,1) forwards,
+      shake .08s 5;
 }
 
-@keyframes monsterShow{
-  0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
-  12%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}
-  20%{transform:translate(-50%,-50%) scale(1)}
-  35%{opacity:1}
-  43%{opacity:.1;transform:translate(-50%,-50%) scale(.8)}
-  48%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}
-  58%{opacity:1}
-  65%{opacity:0;transform:translate(-50%,-50%) scale(.4)}
-  100%{opacity:0}
+@keyframes monsterIn{
+    0%{
+        opacity:0;
+        transform:scale(.1);
+    }
+    55%{
+        opacity:1;
+        transform:scale(1.25);
+    }
+    100%{
+        opacity:1;
+        transform:scale(1);
+    }
 }
 
-/* الرسالة */
-.message{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  opacity:0;
-  animation:messageShow 7s forwards;
-  animation-delay:6s;
+@keyframes shake{
+    0%{transform:translate(8px,-5px) scale(1.03)}
+    50%{transform:translate(-8px,5px) scale(1.03)}
+    100%{transform:translate(5px,3px) scale(1.03)}
 }
 
-.message h1{
-  margin:0;
-  color:#e00000;
-  font-size:clamp(35px,7vw,90px);
-  text-shadow:0 0 10px red,0 0 35px #900;
-  animation:glitch .5s infinite;
+/* النهاية */
+#ending{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    z-index:30;
+    background:
+      radial-gradient(circle,#260000 0%,#080000 35%,#000 75%);
 }
 
-.message p{
-  color:#aaa;
-  font-family:monospace;
-  font-size:18px;
-  margin-top:20px;
+#ending h1{
+    margin:0;
+    color:#ff0000;
+    font-family:Arial,sans-serif;
+    font-size:clamp(45px,7vw,100px);
+    text-shadow:
+      0 0 8px red,
+      0 0 25px red,
+      0 0 50px #550000;
+    animation:glitch .12s infinite;
 }
 
-@keyframes messageShow{
-  0%{opacity:0}
-  10%{opacity:1}
-  15%{opacity:.2}
-  18%{opacity:1}
-  100%{opacity:1}
+#ending p{
+    color:#aaa;
+    font-size:20px;
+    margin-top:20px;
+}
+
+.showEnding{
+    animation:endIn 1s forwards;
+}
+
+@keyframes endIn{
+    to{opacity:1}
 }
 
 @keyframes glitch{
-  0%,100%{transform:translateX(0)}
-  25%{transform:translateX(5px)}
-  26%{transform:translateX(-5px)}
-  50%{transform:skewX(3deg)}
-  51%{transform:skewX(-3deg)}
+    0%{transform:translate(0)}
+    25%{transform:translate(3px,-2px)}
+    50%{transform:translate(-3px,2px)}
+    75%{transform:translate(2px,1px)}
+    100%{transform:translate(0)}
 }
 
-/* دم */
-.blood{
-  position:absolute;
-  top:50%;
-  left:5%;
-  right:5%;
+/* زر البداية */
+#start{
+    position:fixed;
+    inset:0;
+    z-index:200;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#000;
 }
 
-.drop{
-  position:absolute;
-  width:7px;
-  height:var(--h);
-  background:#900;
-  border-radius:0 0 10px 10px;
-  box-shadow:0 0 8px red;
-  animation:drip 2s infinite;
+#start button{
+    padding:18px 45px;
+    background:#000;
+    color:#00ff41;
+    border:2px solid #00ff41;
+    font-size:22px;
+    font-family:monospace;
+    cursor:pointer;
+    box-shadow:0 0 20px #00ff41;
 }
 
-@keyframes drip{
-  0%{transform:scaleY(.1);transform-origin:top}
-  70%{transform:scaleY(1)}
-  100%{transform:translateY(100px);opacity:0}
-}
-
-.scan{
-  position:absolute;
-  inset:0;
-  background:repeating-linear-gradient(
-    0deg,
-    transparent 0,
-    transparent 3px,
-    rgba(255,0,0,.025) 4px
-  );
-  pointer-events:none;
+#start button:hover{
+    background:#00ff41;
+    color:#000;
 }
 </style>
 </head>
 
 <body>
 
-<div class="start" id="start">
-  <button onclick="start()">▶ تشغيل</button>
+<div id="start">
+    <button onclick="start()">▶ تشغيل النظام</button>
 </div>
 
-<div class="scene" id="scene">
+<div id="hack"></div>
 
-  <div class="dark"></div>
+<div id="monster">
+    <div class="monster-body">
+        <div class="horn left"></div>
+        <div class="horn right"></div>
 
-  <div class="monster">
+        <div class="eye left"></div>
+        <div class="eye right"></div>
 
-    <div class="horn left"></div>
-    <div class="horn right"></div>
-
-    <div class="head">
-      <div class="eye left"></div>
-      <div class="eye right"></div>
-
-      <div class="mouth">
-        <span class="tooth"></span>
-        <span class="tooth"></span>
-        <span class="tooth"></span>
-        <span class="tooth"></span>
-        <span class="tooth"></span>
-      </div>
+        <div class="mouth">
+            <span class="tooth"></span>
+            <span class="tooth"></span>
+            <span class="tooth"></span>
+            <span class="tooth"></span>
+            <span class="tooth"></span>
+            <span class="tooth"></span>
+            <span class="tooth"></span>
+            <span class="tooth"></span>
+            <span class="tooth"></span>
+            <span class="tooth"></span>
+        </div>
     </div>
-
-    <div class="body"></div>
-
-  </div>
-
-  <div class="message">
-    <h1>أهلاً بيكي في مملكة جلاده</h1>
-    <p>WELCOME TO THE KINGDOM...</p>
-  </div>
-
-  <div class="blood">
-    <span class="drop" style="left:10%;--h:100px"></span>
-    <span class="drop" style="left:25%;--h:150px"></span>
-    <span class="drop" style="left:40%;--h:80px"></span>
-    <span class="drop" style="left:55%;--h:130px"></span>
-    <span class="drop" style="left:70%;--h:110px"></span>
-    <span class="drop" style="left:85%;--h:160px"></span>
-  </div>
-
-  <div class="scan"></div>
-
 </div>
+
+<div id="ending">
+    <h1>أهلاً بيكي في مملكة جلاده</h1>
+    <p>...WELCOME TO THE KINGDOM</p>
+</div>
+
+<div id="flash"></div>
+<div class="scanlines"></div>
 
 <script>
+
 function start(){
-  document.getElementById("start").style.display="none";
-  document.getElementById("scene").style.display="block";
+
+    document.getElementById("start").style.display="none";
+
+    const hack=document.getElementById("hack");
+
+    const lines=[
+        "[ SYSTEM BOOT ]",
+        "Initializing secure connection...",
+        "Connecting to remote server...",
+        "Connection established.",
+        "",
+        ">> ACCESSING SYSTEM...",
+        ">> BYPASSING SECURITY...",
+        ">> ████████████████████ 100%",
+        "",
+        "WARNING: UNAUTHORIZED ACCESS",
+        "WARNING: UNKNOWN ENTITY DETECTED",
+        "",
+        "Scanning environment...",
+        "Searching...",
+        "Searching...",
+        "ENTITY FOUND.",
+        "",
+        "!!! DO NOT CLOSE THIS WINDOW !!!"
+    ];
+
+    let i=0;
+
+    function typeLine(){
+
+        if(i < lines.length){
+
+            const div=document.createElement("div");
+            div.className="line";
+            div.textContent=lines[i];
+
+            if(lines[i].includes("WARNING") || lines[i].includes("ENTITY")){
+                div.style.color="#ff2222";
+                div.style.textShadow="0 0 10px red";
+            }
+
+            hack.appendChild(div);
+
+            i++;
+            setTimeout(typeLine,170);
+
+        }else{
+
+            setTimeout(jumpscare,900);
+
+        }
+    }
+
+    typeLine();
 }
+
+
+function jumpscare(){
+
+    const flash=document.getElementById("flash");
+    const monster=document.getElementById("monster");
+    const hack=document.getElementById("hack");
+
+    hack.style.display="none";
+
+    /* فلاش مفاجئ */
+    flash.classList.add("flash");
+
+    /* الوحش */
+    setTimeout(()=>{
+        monster.classList.add("showMonster");
+
+        /* اهتزاز الشاشة */
+        document.body.animate([
+            {transform:"translate(0,0)"},
+            {transform:"translate(15px,-10px)"},
+            {transform:"translate(-15px,10px)"},
+            {transform:"translate(10px,5px)"},
+            {transform:"translate(0,0)"}
+        ],{
+            duration:500,
+            iterations:2
+        });
+
+    },100);
+
+    /* اختفاء الوحش */
+    setTimeout(()=>{
+
+        monster.style.opacity="0";
+
+        setTimeout(()=>{
+            document.getElementById("ending")
+                .classList.add("showEnding");
+        },300);
+
+    },2600);
+}
+
 </script>
 
 </body>
