@@ -2,183 +2,241 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZONE GALAD NONTY</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مملكة جلاده</title>
 
 <style>
 *{box-sizing:border-box}
 
 body{
-    margin:0;
-    background:#000;
-    color:#fff;
-    font-family:Arial,sans-serif;
-    overflow:hidden;
+  margin:0;
+  background:#000;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
 }
 
-/* شاشة البداية */
 .start{
-    position:fixed;
-    inset:0;
-    background:#050505;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    z-index:20;
+  position:fixed;
+  inset:0;
+  background:#030303;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:20;
 }
 
-.start button{
-    background:#111;
-    border:2px solid #ff2020;
-    color:#ff2020;
-    padding:20px 45px;
-    font-size:25px;
-    font-weight:bold;
-    border-radius:8px;
-    cursor:pointer;
-    box-shadow:0 0 25px #900;
-    animation:pulse 1.2s infinite;
+button{
+  background:#080808;
+  color:#d00;
+  border:2px solid #900;
+  padding:20px 45px;
+  font-size:24px;
+  font-weight:bold;
+  border-radius:8px;
+  cursor:pointer;
+  box-shadow:0 0 25px #700;
 }
 
-@keyframes pulse{
-    50%{box-shadow:0 0 50px red}
+.scene{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 45%,#260000 0%,#090000 35%,#000 75%);
+  overflow:hidden;
 }
 
-/* شكل الفيديو */
-.video{
-    position:fixed;
-    inset:0;
-    background:
-      radial-gradient(circle at center,#190000 0%,#050000 35%,#000 75%);
-    display:none;
-    overflow:hidden;
+.dark{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.35);
 }
 
-.top{
-    position:absolute;
-    top:18px;
-    left:20px;
-    right:20px;
-    display:flex;
-    justify-content:space-between;
-    color:#aaa;
-    font-size:13px;
-    z-index:5;
+/* الوحش */
+.monster{
+  position:absolute;
+  left:50%;
+  top:46%;
+  transform:translate(-50%,-50%) scale(.2);
+  width:330px;
+  height:430px;
+  opacity:0;
+  animation:monsterShow 7s forwards;
 }
 
-.code{
-    position:absolute;
-    inset:0;
-    padding:20px;
-    color:#0f3;
-    opacity:.22;
-    font-family:monospace;
-    font-size:13px;
-    line-height:20px;
-    animation:scroll 12s linear infinite;
+.head{
+  position:absolute;
+  width:270px;
+  height:300px;
+  left:30px;
+  top:45px;
+  background:#090909;
+  border-radius:48% 48% 42% 42%;
+  box-shadow:0 0 35px #000,0 0 80px #300;
 }
 
-@keyframes scroll{
-    from{transform:translateY(0)}
-    to{transform:translateY(-300px)}
+.horn{
+  position:absolute;
+  width:75px;
+  height:150px;
+  background:#070707;
+  clip-path:polygon(50% 0,100% 100%,0 100%);
+  top:-105px;
 }
 
-.warning{
-    position:absolute;
-    top:30%;
-    width:100%;
-    text-align:center;
-    color:#ff1111;
-    font-family:monospace;
-    font-size:18px;
-    text-shadow:0 0 12px red;
+.horn.left{left:15px;transform:rotate(-22deg)}
+.horn.right{right:15px;transform:rotate(22deg)}
+
+.eye{
+  position:absolute;
+  width:58px;
+  height:28px;
+  background:#ff1111;
+  border-radius:50%;
+  top:115px;
+  box-shadow:0 0 20px red,0 0 45px red;
 }
 
-.title{
-    position:absolute;
-    top:43%;
-    width:100%;
-    text-align:center;
-    color:#ff0000;
-    font-size:clamp(38px,8vw,100px);
-    font-weight:900;
-    text-shadow:
-      0 0 5px red,
-      0 0 20px red,
-      0 0 50px #700;
-    animation:glitch .7s infinite;
-    z-index:4;
+.eye:after{
+  content:"";
+  position:absolute;
+  left:27px;
+  top:2px;
+  width:5px;
+  height:24px;
+  background:#000;
+}
+
+.eye.left{left:45px}
+.eye.right{right:45px}
+
+.mouth{
+  position:absolute;
+  width:155px;
+  height:70px;
+  left:57px;
+  top:190px;
+  background:#000;
+  border-radius:10px 10px 50% 50%;
+  border-bottom:4px solid #900;
+}
+
+.tooth{
+  position:absolute;
+  width:9px;
+  height:25px;
+  background:#ddd;
+  top:0;
+  clip-path:polygon(0 0,100% 0,50% 100%);
+}
+
+.tooth:nth-child(1){left:15px}
+.tooth:nth-child(2){left:40px}
+.tooth:nth-child(3){left:65px}
+.tooth:nth-child(4){left:90px}
+.tooth:nth-child(5){left:115px}
+
+.body{
+  position:absolute;
+  width:230px;
+  height:190px;
+  left:50px;
+  top:285px;
+  background:#070707;
+  border-radius:50% 50% 10% 10%;
+  box-shadow:0 0 50px #000;
+}
+
+@keyframes monsterShow{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}
+  12%{opacity:1;transform:translate(-50%,-50%) scale(1.15)}
+  20%{transform:translate(-50%,-50%) scale(1)}
+  35%{opacity:1}
+  43%{opacity:.1;transform:translate(-50%,-50%) scale(.8)}
+  48%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}
+  58%{opacity:1}
+  65%{opacity:0;transform:translate(-50%,-50%) scale(.4)}
+  100%{opacity:0}
+}
+
+/* الرسالة */
+.message{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  opacity:0;
+  animation:messageShow 7s forwards;
+  animation-delay:6s;
+}
+
+.message h1{
+  margin:0;
+  color:#e00000;
+  font-size:clamp(35px,7vw,90px);
+  text-shadow:0 0 10px red,0 0 35px #900;
+  animation:glitch .5s infinite;
+}
+
+.message p{
+  color:#aaa;
+  font-family:monospace;
+  font-size:18px;
+  margin-top:20px;
+}
+
+@keyframes messageShow{
+  0%{opacity:0}
+  10%{opacity:1}
+  15%{opacity:.2}
+  18%{opacity:1}
+  100%{opacity:1}
 }
 
 @keyframes glitch{
-    0%,100%{transform:translateX(0)}
-    20%{transform:translateX(5px)}
-    21%{transform:translateX(-6px)}
-    50%{transform:skewX(3deg)}
-    51%{transform:skewX(-3deg)}
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(5px)}
+  26%{transform:translateX(-5px)}
+  50%{transform:skewX(3deg)}
+  51%{transform:skewX(-3deg)}
 }
 
-.sub{
-    position:absolute;
-    top:57%;
-    width:100%;
-    text-align:center;
-    color:#aaa;
-    font-family:monospace;
-    font-size:15px;
-    z-index:4;
-}
-
+/* دم */
 .blood{
-    position:absolute;
-    top:56%;
-    left:10%;
-    right:10%;
-    height:200px;
-    z-index:3;
+  position:absolute;
+  top:50%;
+  left:5%;
+  right:5%;
 }
 
 .drop{
-    position:absolute;
-    top:0;
-    width:8px;
-    height:var(--h);
-    background:#a00000;
-    border-radius:0 0 10px 10px;
-    box-shadow:0 0 10px red;
-    animation:drip var(--speed) infinite;
+  position:absolute;
+  width:7px;
+  height:var(--h);
+  background:#900;
+  border-radius:0 0 10px 10px;
+  box-shadow:0 0 8px red;
+  animation:drip 2s infinite;
 }
 
 @keyframes drip{
-    0%{transform:scaleY(.1);transform-origin:top}
-    60%{transform:scaleY(1)}
-    100%{transform:translateY(100px);opacity:0}
+  0%{transform:scaleY(.1);transform-origin:top}
+  70%{transform:scaleY(1)}
+  100%{transform:translateY(100px);opacity:0}
 }
 
-.bottom{
-    position:absolute;
-    bottom:25px;
-    width:100%;
-    text-align:center;
-    color:#555;
-    font-family:monospace;
-    font-size:12px;
-}
-
-.flash{
-    position:absolute;
-    inset:0;
-    background:red;
-    opacity:0;
-    z-index:10;
-    pointer-events:none;
-    animation:flash 3s infinite;
-}
-
-@keyframes flash{
-    0%,92%,100%{opacity:0}
-    94%{opacity:.12}
-    96%{opacity:0}
+.scan{
+  position:absolute;
+  inset:0;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 3px,
+    rgba(255,0,0,.025) 4px
+  );
+  pointer-events:none;
 }
 </style>
 </head>
@@ -186,89 +244,57 @@ body{
 <body>
 
 <div class="start" id="start">
-    <button onclick="startVideo()">▶ تشغيل الفيديو</button>
+  <button onclick="start()">▶ تشغيل</button>
 </div>
 
-<div class="video" id="video">
+<div class="scene" id="scene">
 
-    <div class="top">
-        <span>ZONE GALAD NONTY</span>
-        <span>● LIVE SIGNAL</span>
+  <div class="dark"></div>
+
+  <div class="monster">
+
+    <div class="horn left"></div>
+    <div class="horn right"></div>
+
+    <div class="head">
+      <div class="eye left"></div>
+      <div class="eye right"></div>
+
+      <div class="mouth">
+        <span class="tooth"></span>
+        <span class="tooth"></span>
+        <span class="tooth"></span>
+        <span class="tooth"></span>
+        <span class="tooth"></span>
+      </div>
     </div>
 
-    <div class="code" id="code"></div>
+    <div class="body"></div>
 
-    <div class="warning">
-        SYSTEM WARNING<br>
-        UNKNOWN SIGNAL DETECTED<br>
-        CONNECTION ESTABLISHED
-    </div>
+  </div>
 
-    <div class="title">مرحبًا بك في الموت</div>
+  <div class="message">
+    <h1>أهلاً بيكي في مملكة جلاده</h1>
+    <p>WELCOME TO THE KINGDOM...</p>
+  </div>
 
-    <div class="sub">
-        ACCESSING UNKNOWN NODE...<br>
-        <span id="status">INITIALIZING...</span>
-    </div>
+  <div class="blood">
+    <span class="drop" style="left:10%;--h:100px"></span>
+    <span class="drop" style="left:25%;--h:150px"></span>
+    <span class="drop" style="left:40%;--h:80px"></span>
+    <span class="drop" style="left:55%;--h:130px"></span>
+    <span class="drop" style="left:70%;--h:110px"></span>
+    <span class="drop" style="left:85%;--h:160px"></span>
+  </div>
 
-    <div class="blood">
-        <span class="drop" style="left:5%;--h:100px;--speed:2.2s"></span>
-        <span class="drop" style="left:16%;--h:150px;--speed:3s"></span>
-        <span class="drop" style="left:29%;--h:80px;--speed:2.5s"></span>
-        <span class="drop" style="left:42%;--h:130px;--speed:3.4s"></span>
-        <span class="drop" style="left:55%;--h:90px;--speed:2.8s"></span>
-        <span class="drop" style="left:68%;--h:160px;--speed:3.2s"></span>
-        <span class="drop" style="left:80%;--h:110px;--speed:2.4s"></span>
-        <span class="drop" style="left:93%;--h:140px;--speed:3.6s"></span>
-    </div>
+  <div class="scan"></div>
 
-    <div class="bottom">
-        CONNECTION: ENCRYPTED |
-        NODE: 13-X |
-        STATUS: UNKNOWN
-    </div>
-
-    <div class="flash"></div>
 </div>
 
 <script>
-function startVideo(){
-
-    document.getElementById("start").style.display="none";
-    document.getElementById("video").style.display="block";
-
-    const code=document.getElementById("code");
-
-    let text="";
-
-    const chars="01ABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&@";
-
-    for(let i=0;i<12000;i++){
-        text+=chars[Math.floor(Math.random()*chars.length)];
-
-        if(i%80===0) text+="<br>";
-    }
-
-    code.innerHTML=text;
-
-    const statuses=[
-        "SCANNING...",
-        "ACCESS GRANTED",
-        "TRACE FOUND",
-        "TRACE LOST",
-        "SYSTEM ERROR",
-        "RECONNECTING...",
-        "SIGNAL UNSTABLE",
-        "UNKNOWN USER",
-        "FINAL PROTOCOL ACTIVE"
-    ];
-
-    let i=0;
-
-    setInterval(()=>{
-        document.getElementById("status").textContent=statuses[i];
-        i=(i+1)%statuses.length;
-    },900);
+function start(){
+  document.getElementById("start").style.display="none";
+  document.getElementById("scene").style.display="block";
 }
 </script>
 
